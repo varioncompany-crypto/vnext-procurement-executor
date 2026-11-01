@@ -7,6 +7,11 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--source-bundle',type=Path,default=os.environ.get('PROCUREMENT_SOURCE_BUNDLE_PATH'));group=parser.add_mutually_exclusive_group();group.add_argument('--logistics-source',type=Path);group.add_argument('--prepare-with-logistics',type=Path);group.add_argument('--proforma-source',type=Path);parser.add_argument('--scan-request-id');args=parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='varion-procurement-') as scratch:
         root=Path(scratch)
+        # Current execution contract and policy are mandatory, never an archived checkout.
+        for path in ('tools/PROCUREMENT-APP-CONTRACT.md','architecture/procurement-workflow.v1.json'):
+            r=subprocess.run(['gh','api','repos/varioncompany-crypto/vnext-ceo/contents/'+path+'?ref=main'],capture_output=True,text=True)
+            if r.returncode: raise RuntimeError('current_procurement_contract_fetch_failed')
+            (root/Path(path).name).write_bytes(base64.b64decode(json.loads(r.stdout)['content']))
         for name in ('procurement_workflow.py','procurement_planning.py','procurement_order_handoff.py','procurement_scan.py','shared_tasks.py'):
             r=subprocess.run(['gh','api','repos/varioncompany-crypto/vnext-ceo/contents/tools/'+name+'?ref=main'],capture_output=True,text=True)
             if r.returncode: raise RuntimeError('private_workflow_fetch_failed')
