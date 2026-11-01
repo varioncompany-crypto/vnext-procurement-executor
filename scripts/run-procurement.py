@@ -4,14 +4,14 @@ import base64,json,subprocess,sys,tempfile,argparse,os
 from pathlib import Path
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--source-bundle',type=Path,default=os.environ.get('PROCUREMENT_SOURCE_BUNDLE_PATH'));group=parser.add_mutually_exclusive_group();group.add_argument('--logistics-source',type=Path);group.add_argument('--prepare-with-logistics',type=Path);group.add_argument('--proforma-source',type=Path);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--source-bundle',type=Path,default=os.environ.get('PROCUREMENT_SOURCE_BUNDLE_PATH'));group=parser.add_mutually_exclusive_group();group.add_argument('--logistics-source',type=Path);group.add_argument('--prepare-with-logistics',type=Path);group.add_argument('--proforma-source',type=Path);parser.add_argument('--scan-request-id');args=parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='varion-procurement-') as scratch:
         root=Path(scratch)
-        for name in ('procurement_workflow.py','procurement_planning.py','procurement_order_handoff.py','shared_tasks.py'):
+        for name in ('procurement_workflow.py','procurement_planning.py','procurement_order_handoff.py','procurement_scan.py','shared_tasks.py'):
             r=subprocess.run(['gh','api','repos/varioncompany-crypto/vnext-ceo/contents/tools/'+name+'?ref=main'],capture_output=True,text=True)
             if r.returncode: raise RuntimeError('private_workflow_fetch_failed')
             x=json.loads(r.stdout);(root/name).write_bytes(base64.b64decode(x['content']))
         selected=next(((flag,value) for flag,value in [('--logistics-source',args.logistics_source),('--prepare-with-logistics',args.prepare_with_logistics),('--proforma-source',args.proforma_source)] if value),None)
         extra=[selected[0],str(selected[1].resolve()),'--publish'] if selected else ['--supplier-preflight','--publish']+(['--source-bundle',str(args.source_bundle.resolve())] if args.source_bundle else [])
-        subprocess.run([sys.executable,'-B',str(root/'procurement_workflow.py'),'--private-output',str(root/'private')]+extra,check=True)
+        subprocess.run([sys.executable,'-B',str(root/'procurement_workflow.py'),'--private-output',str(root/'private')]+(['--scan-request-id',args.scan_request_id] if args.scan_request_id else [])+extra,check=True)
 if __name__=='__main__':main()
