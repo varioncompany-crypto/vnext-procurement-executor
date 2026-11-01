@@ -18,7 +18,7 @@ def main():
             r=subprocess.run(['gh','api','repos/varioncompany-crypto/vnext-ceo/contents/'+path+'?ref=main'],capture_output=True,text=True)
             if r.returncode: raise RuntimeError('current_procurement_contract_fetch_failed')
             (root/Path(path).name).write_bytes(base64.b64decode(json.loads(r.stdout)['content']))
-        for name in ('procurement_workflow.py','procurement_historical.py','procurement_planning.py','procurement_order_handoff.py','procurement_logistics_refresh.py','procurement_scan.py','procurement_tracking.py','procurement_supplier_account.py','shared_tasks.py'):
+        for name in ('procurement_workflow.py','procurement_historical.py','procurement_delivery_status.py','procurement_planning.py','procurement_order_handoff.py','procurement_logistics_refresh.py','procurement_scan.py','procurement_tracking.py','procurement_supplier_account.py','shared_tasks.py'):
             r=subprocess.run(['gh','api','repos/varioncompany-crypto/vnext-ceo/contents/tools/'+name+'?ref=main'],capture_output=True,text=True)
             if r.returncode: raise RuntimeError('private_workflow_fetch_failed')
             x=json.loads(r.stdout);(root/name).write_bytes(base64.b64decode(x['content']))
