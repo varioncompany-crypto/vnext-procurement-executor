@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Retrieve the current authorized private workflow; retain no private source payloads."""
+"""Retrieve current policy-aware workflow; explicit no-fixed-TTL logistics only.
+Private source payloads remain outside Git; approval and quote guards are unchanged.
+"""
 import base64,json,subprocess,sys,tempfile,argparse,os
 from pathlib import Path
 
