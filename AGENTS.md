@@ -59,3 +59,17 @@ Before each standard/scheduled run, retrieve private Drive bundle `1pT9bvcAVZZjo
 Before standard/scheduled execution, follow the current contract Current delivery events section: actual paginated supplier/UPS Gmail reads via existing connected tools, retain original event/observation times and exact links, update/read back the existing Drive tracking and bundle. Runner loads these originals automatically and reads the paginated recorded API feed. Never replace external observation time with a cache/check time; User address confirmation and physical inventory remain separate. No schedule change.
 
 Current logistics policy: exact Worker `freshnessPolicy=source_evidence_no_fixed_ttl` plus `ageLimitApplied=false` removes the fixed logistics/address age limit; validUntil may be absent/null. Preserve original source time/hash and User address confirmation. Unknown policy, consumed/invalid evidence, concrete conflicts and unresolved API submits still block. Legacy responses retain legacy expiry. No substitute deadline; quote TTL, concrete approval, single-submit and separate payment remain unchanged. Read current contract and current bootstrap.
+
+## Private readbacks during diagnostics and tests (2026-11-04)
+For setup, health checks and test runs, do not echo private contracts, memory hits,
+provider bodies, account references or credentials into tool logs or chat. Capture
+responses into private scratch and inspect/process them inside the program. Avoid
+cat, printing response.text(), unrestricted jq, repr(error), env dumps and raw
+tracebacks for these inputs. Emit only the minimum needed status, coverage,
+revision and hash. Use `node tools/safe-readback.mjs /tmp/readback.json` for a
+fixed metadata-only summary; it deliberately omits content and arbitrary keys.
+Do not call a summary proof that the full business meaning was reviewed.
+When the user requests a read-only/report-only test, skip context bootstrap steps
+that write receipts; retrieve the same current canonical context without writes.
+An unavailable catalog is not automatic skill discovery. A manually loaded file
+is not proof that the published Cloud snapshot contains it.
